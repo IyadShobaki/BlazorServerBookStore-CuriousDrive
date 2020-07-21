@@ -30,6 +30,7 @@ namespace BlazorAppUI
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
 
+            services.AddSingleton<IPublisherService, PublisherService>();
             services.AddSingleton<IAuthorService, AuthorService>();
         }
 

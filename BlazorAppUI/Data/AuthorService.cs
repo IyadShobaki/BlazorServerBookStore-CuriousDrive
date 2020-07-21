@@ -49,10 +49,11 @@ namespace BlazorAppUI.Data
             return "v1";
         }
 
-        public void SaveAuthor(Author author)
+        public bool SaveAuthor(Author author)
         {
             author.AuthorId = GetNewAuthor();
             Authors.Add(author);
+            return true;
         }
         private string GetNewAuthor()
         {

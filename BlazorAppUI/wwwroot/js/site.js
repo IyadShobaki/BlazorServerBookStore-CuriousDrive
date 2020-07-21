@@ -15,3 +15,14 @@ function getCities() {
 
     return cities;
 }
+
+function confirmDelete() {
+    var x = confirm("Are you sure you want to delete the record?");
+    if (x) {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}

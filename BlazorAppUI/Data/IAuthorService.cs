@@ -12,6 +12,6 @@ namespace BlazorAppUI.Data
         List<Author> GetAuthors();
         DateTime GetCreatedDate();
         string GetVersion();
-        void SaveAuthor(Author author);
+        bool SaveAuthor(Author author);
     }
 }

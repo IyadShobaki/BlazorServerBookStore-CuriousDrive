@@ -55,7 +55,7 @@ namespace BlazorAppUI.Data
             return "v2";
         }
 
-        public void SaveAuthor(Author author)
+        public bool SaveAuthor(Author author)
         {
             throw new NotImplementedException();
         }
