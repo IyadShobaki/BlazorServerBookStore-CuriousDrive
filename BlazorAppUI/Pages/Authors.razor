@@ -1,16 +1,23 @@
 ﻿@page "/authors"
 @inject IAuthorService authorService
+@inject IJSRuntime JSRuntime
 
 <div class="col-12">
     <h3><b>Enter Author Information</b></h3>
-    <hr/>
+    <hr />
+
+    <div id="divServerValidations" class="col-10 alert alert-info">
+
+    </div>
+
     <EditForm Model="@author" OnValidSubmit="@SaveAuthor">
-        <DataAnnotationsValidator/>
+        @*<DataAnnotationsValidator />*@
         @*<ValidationSummary/>*@
         <div class="col-12 row">
             <label class="col-2 font-weight-bold">first name :</label>
-            <InputText class="form-control col-3" @bind-Value="author.FirstName" placeholder="first name" />
-            &nbsp;<ValidationMessage For="@(() => author.FirstName)"/>
+            @*<InputText class="form-control col-3" @bind-Value="author.FirstName" placeholder="first name" />*@
+            <input @ref="firstNameText" class="form-control col-3" @bind="author.FirstName" placeholder="first name" />
+            &nbsp;<ValidationMessage For="@(() => author.FirstName)" />
         </div>
         <div class="col-12 row">
             <label class="col-2 font-weight-bold">last name :</label>
@@ -19,8 +26,18 @@
         </div>
         <div class="col-12 row">
             <label class="col-2 font-weight-bold">city :</label>
-            <InputText class="form-control col-3" @bind-Value="author.City" placeholder="city" />
-            &nbsp;<ValidationMessage For="@(() => author.City)" />
+            <InputSelect @bind-Value="author.City" class="form-control col-3">
+                @if (Cities != null)
+                {
+                    foreach (var city in Cities)
+                    {
+                        <option value="@city">@city</option>
+                    }
+                }
+
+            </InputSelect>
+            @*<InputText class="form-control col-3" @bind-Value="author.City" placeholder="city" />
+            &nbsp;<ValidationMessage For="@(() => author.City)" />*@
         </div>
         <div class="col-12 row">
             <label class="col-2 font-weight-bold">email address :</label>
@@ -43,12 +60,12 @@
 
 </div>
 
-<br/>
+<br />
 
 <div class="col-10">
 
     <h3>Authors</h3>
-    
+
     <table class="table">
         <thead>
             <tr>
@@ -63,24 +80,25 @@
         <tbody>
             @foreach (Author author in AuthorList)
             {
-            <tr>
-                <td>
-                    <NavLink href=@string.Format("/authors/authordetail/{0}", @author.AuthorId)>
-                        @author.AuthorId
-                    </NavLink>
-                </td>
-                <td>@author.FirstName</td>
-                <td>@author.LastName</td>
-                <td>@author.City</td>
-                <td>@author.EmailAddress</td>
-                <td>@author.Salary</td>
-            </tr>              
+                <tr>
+                    <td>
+                        <NavLink href=@string.Format("/authors/authordetail/{0}", @author.AuthorId)>
+                            @author.AuthorId
+                        </NavLink>
+                    </td>
+                    <td>@author.FirstName</td>
+                    <td>@author.LastName</td>
+                    <td>@author.City</td>
+                    <td>@author.EmailAddress</td>
+                    <td>@author.Salary</td>
+                </tr>
+
             }
         </tbody>
     </table>
 </div>
 
-<hr/>
+<hr />
 
 <div class="col-12 row">@authorService.GetCreatedDate()</div>
 <div class="col-12 row">version : @authorService.GetVersion()</div>
@@ -90,15 +108,34 @@
     public Author author { get; set; }
     public List<Author> AuthorList { get; set; }
 
+    public string[] Cities { get; set; }
+
+    ElementReference firstNameText;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && Cities == null)
+        {
+            Cities = await JSRuntime.InvokeAsync<string[]>("getCities");
+
+            StateHasChanged();
+        }
+    }
+
     protected override void OnInitialized()
     {
         author = new Author();
         AuthorList = authorService.GetAuthors();
     }
 
-    private void SaveAuthor()
+    private async Task SaveAuthor()
     {
         authorService.SaveAuthor(author);
+        var firstName = author.FirstName;
+        var lastName = author.LastName;
         author = new Author();
+
+        await JSRuntime.InvokeVoidAsync("saveMessage",firstName,lastName);
+        await JSRuntime.InvokeVoidAsync("setFocusOnElement", firstNameText);
     }
 }
