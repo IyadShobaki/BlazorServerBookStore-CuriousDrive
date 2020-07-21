@@ -30,7 +30,7 @@ namespace BlazorAppUI
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
 
-            services.AddSingleton<IAuthorService, AuthorService_v2>();
+            services.AddSingleton<IAuthorService, AuthorService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,24 +1,84 @@
 ﻿@page "/authors"
 @inject IAuthorService authorService
-<h3>Authors</h3>
-<hr />
 
 <div class="col-12">
-    @foreach (Author author in AuthorList)
-    {
+    <h3><b>Enter Author Information</b></h3>
+    <hr/>
+    <EditForm Model="@author" OnValidSubmit="@SaveAuthor">
+        <DataAnnotationsValidator/>
+        @*<ValidationSummary/>*@
         <div class="col-12 row">
-            <div class="col-2">
-                <NavLink href=@string.Format("/authors/authordetail/{0}", @author.AuthorId)>
-                    @author.AuthorId
-                </NavLink>
-            </div>
-            <div class="col-2">@author.FirstName @author.LastName</div>
+            <label class="col-2 font-weight-bold">first name :</label>
+            <InputText class="form-control col-3" @bind-Value="author.FirstName" placeholder="first name" />
+            &nbsp;<ValidationMessage For="@(() => author.FirstName)"/>
         </div>
-    }
+        <div class="col-12 row">
+            <label class="col-2 font-weight-bold">last name :</label>
+            <InputText class="form-control col-3" @bind-Value="author.LastName" placeholder="last name" />
+            &nbsp;<ValidationMessage For="@(() => author.LastName)" />
+        </div>
+        <div class="col-12 row">
+            <label class="col-2 font-weight-bold">city :</label>
+            <InputText class="form-control col-3" @bind-Value="author.City" placeholder="city" />
+            &nbsp;<ValidationMessage For="@(() => author.City)" />
+        </div>
+        <div class="col-12 row">
+            <label class="col-2 font-weight-bold">email address :</label>
+            <InputText class="form-control col-3" @bind-Value="author.EmailAddress" placeholder="email address" />
+            &nbsp;<ValidationMessage For="@(() => author.EmailAddress)" />
+        </div>
+        <div class="col-12 row">
+            <label class="col-2 font-weight-bold">salary :</label>
+            <InputNumber class="form-control col-3" @bind-Value="author.Salary" placeholder="salary" />
+            &nbsp;<ValidationMessage For="@(() => author.Salary)" />
+        </div>
+        <br />
+        <div class="col-12 row">
+            <span class="col-2"></span>
+            <input type="submit" class="form-control col-1 btn btn-primary" value="Save" />
+            <span>&nbsp;</span>
+            <input type="submit" class="form-control col-1 btn btn-primary" value="Clear" />
+        </div>
+    </EditForm>
 
 </div>
 
+<br/>
 
+<div class="col-10">
+
+    <h3>Authors</h3>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>AuthorId</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>City</th>
+                <th>Email</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Author author in AuthorList)
+            {
+            <tr>
+                <td>
+                    <NavLink href=@string.Format("/authors/authordetail/{0}", @author.AuthorId)>
+                        @author.AuthorId
+                    </NavLink>
+                </td>
+                <td>@author.FirstName</td>
+                <td>@author.LastName</td>
+                <td>@author.City</td>
+                <td>@author.EmailAddress</td>
+                <td>@author.Salary</td>
+            </tr>              
+            }
+        </tbody>
+    </table>
+</div>
 
 <hr/>
 
@@ -26,12 +86,19 @@
 <div class="col-12 row">version : @authorService.GetVersion()</div>
 
 @code {
+
+    public Author author { get; set; }
     public List<Author> AuthorList { get; set; }
-    //public AuthorService authorService { get; set; }
 
     protected override void OnInitialized()
     {
-        //authorService = new AuthorService();
+        author = new Author();
         AuthorList = authorService.GetAuthors();
+    }
+
+    private void SaveAuthor()
+    {
+        authorService.SaveAuthor(author);
+        author = new Author();
     }
 }

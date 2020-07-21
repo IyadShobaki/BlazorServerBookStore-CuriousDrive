@@ -16,12 +16,16 @@ namespace BlazorAppUI.Data
 
             Authors = new List<Author>();
 
-            Authors.Add(new Author("172-32-1176", "Johnson", "White", "408 496 7223", "Menlo Park"));
-            Authors.Add(new Author("213-46-8915", "Marjorie", "Green", "415 986 7020", "Oakland"));
-            Authors.Add(new Author("238-95-7766", "Cheryl", "Carson", "415 548 7723", "Berkeley"));
-            Authors.Add(new Author("267-41-2394", "Michael", "O'Leary", "408 286 2428", "San Jose"));
-            Authors.Add(new Author("274-80-9391", "Dean", "Straight", "415 834 2919", "Oakland"));
-
+            Authors.Add(new Author("172-32-1176", "Johnson", "White",
+                  "408 496 7223", "Menlo Park", "johnson.white@gmail.com", 11000));
+            Authors.Add(new Author("213-46-8915", "Marjorie", "Green",
+                "415 986 7020", "Oakland", "marjorite.green@gmail.com", 22000));
+            Authors.Add(new Author("238-95-7766", "Cheryl", "Carson",
+                "415 548 7723", "Berkeley", "cheryl.carson@gmail.com", 39000));
+            Authors.Add(new Author("267-41-2394", "Michael", "O'Leary",
+                "408 286 2428", "San Jose", "michael.oleary@gmail.com", 31000));
+            Authors.Add(new Author("274-80-9391", "Dean", "Straight",
+                "415 834 2919", "Oakland", "dean.straight@gmail.com", 29000));
         }
 
         public List<Author> GetAuthors()
@@ -49,6 +53,11 @@ namespace BlazorAppUI.Data
         public string GetVersion()
         {
             return "v2";
+        }
+
+        public void SaveAuthor(Author author)
+        {
+            throw new NotImplementedException();
         }
     }
 }
